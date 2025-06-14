@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		package="hev.socks5"
 		xmlns:tools="http://schemas.android.com/tools">
-	<application android:label="@string/app_name" android:theme="@android:style/Theme.Holo">
+	<application android:label="@string/app_name" android:theme="@android:style/Theme.Holo.Light"
+		android:icon="@mipmap/ic_launcher">
 		<service android:name=".Socks5Service" android:process=":native"
 				android:exported="true" android:foregroundServiceType="specialUse">
 			<property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
