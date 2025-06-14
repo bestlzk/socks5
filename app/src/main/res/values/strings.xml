@@ -2,6 +2,7 @@
 <resources>
 	<string name="app_name">Socks5</string>
 	<string name="workers">Workers:</string>
+	<string name="ip_addr">IP Address:</string>
 	<string name="listen_addr">Listen Address:</string>
 	<string name="listen_port">Listen Port:</string>
 	<string name="udp_listen_addr">UDP Listen Address: (Optional)</string>

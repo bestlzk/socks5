@@ -13,14 +13,18 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import java.net.*;
+import java.util.*;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 	private Preferences prefs;
+	private EditText edittext_ip_addr;
 	private EditText edittext_workers;
 	private EditText edittext_listen_addr;
 	private EditText edittext_listen_port;
@@ -42,6 +46,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		prefs = new Preferences(this);
 		setContentView(R.layout.main);
 
+		edittext_ip_addr = (EditText) findViewById(R.id.ip_addr);
 		edittext_workers = (EditText) findViewById(R.id.workers);
 		edittext_listen_addr = (EditText) findViewById(R.id.listen_addr);
 		edittext_listen_port = (EditText) findViewById(R.id.listen_port);
@@ -82,6 +87,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private void updateUI() {
+		List<String> ip_list = getNonLoopbackAddresses();
+		edittext_ip_addr.setText(String.join("\n", ip_list));
+		edittext_ip_addr.setEnabled(false);
 		edittext_workers.setText(Integer.toString(prefs.getWorkers()));
 		edittext_listen_addr.setText(prefs.getListenAddress());
 		edittext_listen_port.setText(Integer.toString(prefs.getListenPort()));
@@ -126,5 +134,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		prefs.setAuthUsername(edittext_auth_user.getText().toString());
 		prefs.setAuthPassword(edittext_auth_pass.getText().toString());
 		prefs.setListenIPv6Only(checkbox_listen_ipv6_only.isChecked());
+	}
+
+	private List<String> getNonLoopbackAddresses() {
+		List<String> addresses = new ArrayList<>();
+		try {
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+			while (interfaces.hasMoreElements()) {
+				NetworkInterface iface = interfaces.nextElement();
+				if (iface.isUp()) {
+					Enumeration<InetAddress> inetAddresses = iface.getInetAddresses();
+					while (inetAddresses.hasMoreElements()) {
+						InetAddress addr = inetAddresses.nextElement();
+						if (!addr.isLoopbackAddress() && !addr.getHostAddress().contains(":")) {
+							addresses.add(addr.getHostAddress());
+						}
+					}
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		return addresses;
 	}
 }
