@@ -17,9 +17,10 @@ A simple and lightweight socks5 server for Android.
 Fork this project and create a new release, or build manually:
 
 ```bash
-git clone --recursive https://github.com/heiher/socks5
+git clone --recursive https://github.com/bestlzk/socks5
 cd socks5
-gradle assembleDebug
+./gradlew assembleDebug
+./gradlew assembleRelease
 ```
 
 ## Dependencies
